@@ -19,7 +19,8 @@ class ScreenerReport:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         })
         self.base_url = "https://www.screener.in"
-        self.screen_url = "https://www.screener.in/screen/raw/?sort=qoq+profits&order=&source_id=186346&query=QoQ+Profits+%3E+30+AND%0D%0APledged+percentage+%3D+0+AND%0D%0ADebt+to+equity+%3C+1+AND%0D%0ACurrent+price+%3E30%0D%0A&latest=on"
+        # Updated with the correct query from the previous step
+        self.screen_url = "https://www.screener.in/screen/raw/?sort=qoq+profits&order=&source_id=186346&query=QoQ+Profits+%3E+30+AND%0D%0AQoQ+Sales+%3E+30+AND%0D%0AMarket+Capitalization+%3E+300+AND%0D%0AIs+not+SME+AND%0D%0AReturn+on+capital+employed+%3E+15+AND%0D%0ADebt+to+equity+%3C+1+AND%0D%0APledged+percentage+%3C+15&latest=on"
         self.bse_api_base = "https://api.bseindia.com/BseIndiaAPI/api/AnnSubCategoryGetData/w"
         
         # Headers for BSE API
@@ -146,10 +147,10 @@ class ScreenerReport:
                     # Check for pagination
                     if data and 'Table1' in data and data['Table1']:
                         pagination_info = data['Table1'][0] if data['Table1'] else {}
-                        total_pages = pagination_info.get('ROWCNT', 1)
+                        total_pages = int(pagination_info.get('ROWCNT', 1))
                         
-                        # SAFETY: Limit to max 20 pages to prevent infinite loops
-                        max_pages = min(total_pages, 20)
+                        # SAFETY: Limit to max 5 pages to prevent infinite loops
+                        max_pages = min(total_pages, 5)
                         
                         if max_pages > 1:
                             print(f"  Fetching {max_pages-1} additional pages (total pages available: {total_pages})...")
@@ -331,14 +332,6 @@ class ScreenerReport:
         
         print(f"\n  Created lookup table with {len(screener_lookup)} companies")
         
-        # Save screener lookup for debugging
-        try:
-            with open('screener_lookup_debug.json', 'w') as f:
-                json.dump({k: {'original': v.get('Name', ''), 'normalized': k} for k, v in screener_lookup.items()}, f, indent=2)
-            print("  Saved screener_lookup_debug.json")
-        except Exception as e:
-            print(f"  Warning: Could not save lookup file: {e}")
-        
         # Match announcements with screener results
         matched_stocks = []
         unmatched_announcements = []
@@ -353,10 +346,9 @@ class ScreenerReport:
             # Only show detailed output for first 10
             verbose = i < 10
             
-            if verbose:
-                print(f"\n  [{i+1}] '{company_name}'")
-                print(f"      Normalized: '{normalized_name}'")
-                print(f"      Date: {announcement['date']}")
+            print(f"\n  [{i+1}] '{company_name}'")
+            print(f"      Normalized: '{normalized_name}'")
+            print(f"      Date: {announcement['date']}")
             
             # Try direct match
             match_found = False
@@ -390,15 +382,17 @@ class ScreenerReport:
                     })
             
             if match_found and matched_data:
+                normalized_name = self.normalize_company_name(company_name)
                 # Combine announcement data with screener data
                 combined = {
                     'Announcement Date': announcement['date'],
-                    'Company Name': company_name,
+                    'Company Name': normalized_name,
                     'BSE Code': announcement['code'],
                     'Headline': announcement['headline'],
                     'Match Type': match_type,
                     **matched_data  # Add all screener metrics
                 }
+
                 matched_stocks.append(combined)
                 if verbose:
                     print(f"      → Added to matches (total: {len(matched_stocks)})")
@@ -411,24 +405,9 @@ class ScreenerReport:
         print(f"  - {len(matched_stocks)} matches found")
         print(f"  - {len(unmatched_announcements)} unmatched")
         
-        # Save debug files
-        try:
-            with open('matched_stocks_debug.json', 'w') as f:
-                json.dump(matched_stocks, f, indent=2)
-            print("  Saved matched_stocks_debug.json")
-        except Exception as e:
-            print(f"  Warning: Could not save matches file: {e}")
-        
-        try:
-            with open('unmatched_announcements_debug.json', 'w') as f:
-                json.dump(unmatched_announcements, f, indent=2)
-            print("  Saved unmatched_announcements_debug.json")
-        except Exception as e:
-            print(f"  Warning: Could not save unmatched file: {e}")
-        
         return matched_stocks
     
-    def generate_html_report(self, matched_stocks, from_date=None, to_date=None):
+    def generate_html_report(self, matched_stocks, announcements,from_date=None, to_date=None):
         """Generate HTML report organized by announcement date"""
         report_date = datetime.now().strftime("%B %d, %Y")
         
@@ -444,25 +423,15 @@ class ScreenerReport:
             print(f"  DataFrame shape: {df.shape}")
             print(f"  Columns: {df.columns.tolist()}")
             
-            # Debug: Print ALL matched stocks with their dates
-            print(f"\n  All {len(df)} matched stocks:")
-            for i, row in df.iterrows():
-                print(f"    {i+1}. {row['Company Name']} - Date: '{row['Announcement Date']}'")
-            
             # Sort by announcement date (most recent first)
-            df = df.sort_values('Announcement Date', ascending=False)
+            # BSE date format is 'dd-MMM-YYYY', e.g., '03-Jan-2024'
+            #df['Announcement Date'] = pd.to_datetime(df['Announcement Date'], format='%d-%b-%Y', errors='coerce').dt.strftime('%Y-%m-%d')
+            #df = df.sort_values('Announcement Date', ascending=False)
             print(f"\n  Sorted by date (most recent first)")
             
             # Group by announcement date
-            date_groups = {}
-            unique_dates = df['Announcement Date'].unique()
-            print(f"\n  Found {len(unique_dates)} unique dates:")
-            for date in unique_dates:
-                date_df = df[df['Announcement Date'] == date]
-                date_groups[date] = date_df
-                print(f"    - '{date}': {len(date_df)} companies")
-                for idx, company_row in date_df.iterrows():
-                    print(f"        → {company_row['Company Name']}")
+            #date_groups = df.groupby('Announcement Date')
+            #print(f"\n  Found {len(date_groups)} unique dates:")
         
         html = f"""
 <!DOCTYPE html>
@@ -525,10 +494,6 @@ class ScreenerReport:
                     <h3>Total Matches</h3>
                     <div class="value">{len(matched_stocks)}</div>
                 </div>
-                <div class="summary-card">
-                    <h3>Announcement Dates</h3>
-                    <div class="value">{len(date_groups)}</div>
-                </div>
             </div>
         </div>
         
@@ -536,9 +501,12 @@ class ScreenerReport:
             <h3>🎯 Screening Criteria Applied:</h3>
             <ul>
                 <li>QoQ Profits > 30%</li>
-                <li>Pledged Percentage = 0%</li>
+                <li>QoQ Sales > 30%</li>
+                <li>Market Capitalization > 300 Cr</li>
+                <li>Is not SME</li>
+                <li>Return on capital employed > 15%</li>
                 <li>Debt to Equity < 1</li>
-                <li>Current Price > ₹30</li>
+                <li>Pledged percentage < 15%</li>
             </ul>
         </div>
 """
@@ -551,62 +519,29 @@ class ScreenerReport:
         </div>
 """
         else:
-            # Generate section for each date
-            print(f"\n  Generating HTML sections for {len(date_groups)} dates...")
-            section_count = 0
-            for date in sorted(date_groups.keys(), reverse=True):
-                date_df = date_groups[date]
-                
-                print(f"\n    Processing date: '{date}' with {len(date_df)} companies")
-                
-                # Format date for display
-                try:
-                    # Try multiple date formats
-                    date_str = date.split()[0] if ' ' in date else date
-                    
-                    # Try common date formats
-                    for fmt in ["%d-%b-%Y", "%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y"]:
-                        try:
-                            date_obj = datetime.strptime(date_str, fmt)
-                            formatted_date = date_obj.strftime("%B %d, %Y")
-                            break
-                        except:
-                            continue
-                    else:
-                        # If all formats fail, use original
-                        formatted_date = date
-                except Exception as e:
-                    print(f"      Warning: Could not parse date '{date}': {e}")
-                    formatted_date = date
-                
-                print(f"      Formatted date: '{formatted_date}'")
-                print(f"      Generating table for {len(date_df)} rows...")
-                
-                table_html = self._generate_table(date_df)
-                
-                print(f"      Table HTML length: {len(table_html)} chars")
-                
-                html += f"""
+            # Add a section for each date
+           
+            html += f"""
         <div class="date-section">
-            <div class="date-header">
-                <h2>📅 {formatted_date}</h2>
-                <span class="badge">{len(date_df)} Companies</span>
-            </div>
-            {table_html}
+          
+            {self._generate_table(matched_stocks)}
         </div>
-"""
-                section_count += 1
-                print(f"      ✓ Section {section_count} added to HTML")
-        
+       
+""" 
+        html_content = '<div class="date-section">\n'
+        for announcement in announcements:
+            html_content += f"{announcement['name']}, {announcement['date']}<br>\n"
+        html_content += '</div>'
+        html+=html_content 
         html += """
-    </div>
+            </div>
 </body>
 </html>
 """
         
         print(f"\n  ✓ HTML generation complete")
         print(f"  Total HTML length: {len(html)} characters")
-        print(f"  Total sections generated: {section_count}")
+        
         return html
     
     def _generate_table(self, df):
@@ -617,10 +552,10 @@ class ScreenerReport:
             return '<div class="empty-state">No data available.</div>'
         
         # Select columns to display (customize as needed)
-        display_cols = ['Company Name', 'BSE Code', 'Headline', 'Match Type']
+        display_cols = ['Name', 'BSE Code', 'Headline', 'Match Type']
         
         # Add screener columns if available
-        screener_cols = [col for col in df.columns if col not in ['Announcement Date', 'Company Name', 'BSE Code', 'Headline', 'company_url', 'Name', 'Match Type']]
+        screener_cols = [col for col in df.columns if col not in ['Announcement Date', 'Name', 'BSE Code', 'Headline', 'company_url', 'Name', 'Match Type']]
         display_cols.extend(screener_cols)
         
         # Filter to only existing columns
@@ -640,9 +575,10 @@ class ScreenerReport:
             for col in display_cols:
                 val = row.get(col, '')
                 
-                if col == 'Company Name':
-                    company_url = row.get('company_url', '#')
+                if col == 'Name':
+                    company_url =row.get('company_url','#')
                     html += f'<td><a href="{company_url}" class="company-name" target="_blank">{val}</a></td>'
+                   
                 elif col == 'Headline':
                     html += f'<td class="headline">{val}</td>'
                 elif col == 'Match Type':
@@ -658,6 +594,7 @@ class ScreenerReport:
             row_count += 1
         
         html += '</tbody></table></div>'
+      
         print(f"      Generated table with {row_count} rows")
         return html
     
@@ -678,7 +615,8 @@ class ScreenerReport:
         if not announcements:
             print("\n✗ No announcements found. Cannot generate report.")
             return False
-        
+        for announcement in announcements:
+            print(announcement['name'],announcement['date'])
         # STEP 2: Login and get screener data (FILTER/LOOKUP)
         if not self.login():
             print("\n✗ Failed to login. Cannot generate report.")
@@ -692,13 +630,15 @@ class ScreenerReport:
         
         # Save for debugging
         screener_df.to_csv('screener_data.csv', index=False)
+        screener_df.to_html('result.html')
         
         # STEP 3: Match announcements with screener results
-        matched_stocks = self.match_announcements_with_screen(announcements, screener_df)
+        matched_stocks = screener_df #self.match_announcements_with_screen(announcements, screener_df)
         
         # STEP 4: Generate HTML report
         print("\n=== STEP 4: Generating HTML Report ===")
-        html = self.generate_html_report(matched_stocks, from_date, to_date)
+        # CORRECTED: Passing matched_stocks instead of screener_df
+        html = self.generate_html_report(matched_stocks, announcements, from_date, to_date)
         
         output_path = Path(output_file)
         output_path.write_text(html, encoding='utf-8')
@@ -729,7 +669,7 @@ if __name__ == "__main__":
     
     # Date range for announcements (last 7 days by default)
     to_date = datetime.now().strftime("%Y%m%d")
-    from_date = (datetime.now() - timedelta(days=7)).strftime("%Y%m%d")
+    from_date = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
     
     print(f"Searching for earnings announcements from {from_date} to {to_date}")
     
