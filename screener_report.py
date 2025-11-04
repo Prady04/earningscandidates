@@ -545,6 +545,7 @@ class ScreenerReport:
         return html
     
     def _generate_table(self, df):
+        listofstocks = []
         """Generate HTML table from dataframe"""
         print(f"\n      _generate_table called with {len(df)} rows")
         
@@ -577,7 +578,22 @@ class ScreenerReport:
                 
                 if col == 'Name':
                     company_url =row.get('company_url','#')
-                    html += f'<td><a href="{company_url}" class="company-name" target="_blank">{val}</a></td>'
+                    import re
+
+
+                
+                    # Extract stock name from URL
+                    # URL format: https://www.screener.in/company/BEL/consolidated/
+                    stock_name = val  # Default to original value
+                    
+                    if company_url != '#':
+                        # Method 1: Using regex to extract the stock symbol
+                        match = re.search(r'/company/([^/]+)/', company_url)
+                        if match:
+                            stock_name = match.group(1)
+    
+                    html += f'<td><a href="{company_url}" class="company-name" target="_blank">{stock_name}</a></td>'
+                    listofstocks.append(stock_name)
                    
                 elif col == 'Headline':
                     html += f'<td class="headline">{val}</td>'
@@ -594,7 +610,8 @@ class ScreenerReport:
             row_count += 1
         
         html += '</tbody></table></div>'
-      
+        result = ', '.join(listofstocks)
+        print(result)
         print(f"      Generated table with {row_count} rows")
         return html
     

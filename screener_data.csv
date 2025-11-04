@@ -1,20 +1,23 @@
 S.No.,company_url,Name,CMP,P/E,Mar Cap,Div Yld,NP Qtr,Qtr Profit Var,Sales Qtr,Qtr Sales Var,ROCE,QoQ Profits,QoQ Sales
-1.,https://www.screener.in/company/FABTECH/consolidated/,Fabtech Tech.,236.60,18.81,1051.52,0.00,28.11,449.02,121.48,106.81,22.25,558.56,78.62
-2.,https://www.screener.in/company/RAYMONDREL/consolidated/,Raymond Realty,623.45,57.43,4151.89,0.00,60.18,1123.17,696.50,207.93,16.38,264.73,86.06
-3.,https://www.screener.in/company/504176/,High Energy Bat.,579.55,38.62,519.50,0.52,2.01,11.67,17.30,15.72,22.95,157.69,30.37
-4.,https://www.screener.in/company/JARO/,Jaro Institute,630.85,28.65,1391.65,0.00,17.02,-15.37,80.41,8.24,39.89,126.03,32.54
-5.,https://www.screener.in/company/AEROFLEX/consolidated/,Aeroflex,189.87,51.14,2446.64,0.16,14.23,4.17,110.87,16.72,22.34,98.47,31.47
-6.,https://www.screener.in/company/EPACKPEB/consolidated/,EPack PrefabTech,295.60,39.87,2966.72,0.00,29.47,104.23,433.94,61.89,23.71,83.84,46.93
-7.,https://www.screener.in/company/539479/,GTV Engineering,73.19,24.29,342.96,0.18,3.51,205.22,24.50,3.99,28.49,68.75,48.48
-8.,https://www.screener.in/company/JAINREC/,Jain Resource,372.70,50.65,12833.09,0.00,98.64,80.53,2054.91,52.96,27.20,66.76,39.82
-9.,https://www.screener.in/company/ACUTAAS/consolidated/,Acutaas Chemical,1810.40,66.33,14855.48,0.08,71.86,93.52,306.20,24.10,19.92,63.28,47.75
-10.,https://www.screener.in/company/ARKADE/consolidated/,Arkade,173.46,20.40,3221.07,0.58,45.81,5.58,263.65,30.75,30.30,59.28,65.35
-11.,https://www.screener.in/company/COROMANDEL/consolidated/,Coromandel Inter,2144.20,29.73,63238.47,0.56,793.44,21.28,9654.13,29.88,23.20,58.18,37.09
-12.,https://www.screener.in/company/KIRLPNU/,Kirl.Pneumatic,1119.00,38.09,7266.27,0.89,43.20,-36.09,378.10,-12.21,28.27,53.74,39.01
-13.,https://www.screener.in/company/ARVSMART/consolidated/,Arvind SmartSp.,628.90,31.19,2877.14,0.95,18.07,-65.15,140.51,-47.09,19.05,51.09,38.08
-14.,https://www.screener.in/company/GLOBAL/,Global Education,72.35,18.58,368.27,2.07,6.57,-37.19,24.69,5.56,35.93,50.00,71.70
-15.,https://www.screener.in/company/MARINE/consolidated/,Marine Electric.,240.85,71.19,3322.39,0.12,16.62,29.64,222.25,20.72,16.06,43.40,33.10
-16.,https://www.screener.in/company/DPABHUSHAN/,D.P. Abhushan,1474.70,22.32,3356.45,0.00,51.46,104.78,967.65,-3.69,33.64,41.30,79.07
-17.,https://www.screener.in/company/SONACOMS/consolidated/,Sona BLW Precis.,481.25,47.72,29920.32,0.66,170.46,14.34,1138.29,23.43,17.82,40.05,33.30
-18.,https://www.screener.in/company/KKCL/,Kewal Kir.Cloth.,517.55,25.61,3179.92,0.39,42.55,-34.00,287.84,13.69,18.79,39.33,58.78
-19.,https://www.screener.in/company/BEL/consolidated/,Bharat Electron,422.30,54.19,308655.75,0.57,1287.16,17.88,5792.09,25.78,38.88,32.83,30.46
+1.,https://www.screener.in/company/FABTECH/consolidated/,Fabtech Tech.,237.72,18.88,1055.80,0.00,28.11,449.02,121.48,106.81,22.25,558.56,78.62
+2.,https://www.screener.in/company/RAYMONDREL/consolidated/,Raymond Realty,614.75,56.54,4087.38,0.00,60.18,1123.17,696.50,207.93,16.38,264.73,86.06
+3.,https://www.screener.in/company/BUTTERFLY/,Butterfly Gan Ap,750.50,32.94,1343.05,0.00,17.00,34.07,292.99,13.69,15.04,164.39,56.37
+4.,https://www.screener.in/company/504176/,High Energy Bat.,577.35,38.48,517.53,0.52,2.01,11.67,17.30,15.72,22.95,157.69,30.37
+5.,https://www.screener.in/company/JARO/,Jaro Institute,621.50,28.27,1373.31,0.00,17.02,-15.37,80.41,8.24,39.89,126.03,32.54
+6.,https://www.screener.in/company/AEROFLEX/consolidated/,Aeroflex,182.82,49.53,2369.48,0.16,14.23,4.17,110.87,16.72,22.34,98.47,31.47
+7.,https://www.screener.in/company/EPACKPEB/consolidated/,EPack PrefabTech,301.45,40.73,3030.69,0.00,29.47,104.23,433.94,61.89,23.71,83.84,46.93
+8.,https://www.screener.in/company/EBGNG/consolidated/,GNG Electronics,346.65,50.29,3944.58,0.00,32.66,41.63,439.92,24.75,19.84,76.35,40.87
+9.,https://www.screener.in/company/539479/,GTV Engineering,73.06,24.25,342.35,0.18,3.51,205.22,24.50,3.99,28.49,68.75,48.48
+10.,https://www.screener.in/company/JAINREC/,Jain Resource,377.25,51.41,13025.35,0.00,98.64,80.53,2054.91,52.96,27.20,66.76,39.82
+11.,https://www.screener.in/company/ACUTAAS/consolidated/,Acutaas Chemical,1834.30,67.00,15006.02,0.08,71.86,93.52,306.20,24.10,19.92,63.28,47.75
+12.,https://www.screener.in/company/ARKADE/consolidated/,Arkade,170.48,19.91,3143.63,0.59,45.81,5.58,263.65,30.75,30.30,59.28,65.35
+13.,https://www.screener.in/company/COROMANDEL/consolidated/,Coromandel Inter,2168.80,30.07,63962.49,0.55,793.44,21.28,9654.13,29.88,23.20,58.18,37.09
+14.,https://www.screener.in/company/KIRLPNU/,Kirl.Pneumatic,1104.20,37.62,7175.30,0.91,43.20,-36.09,378.10,-12.21,28.27,53.74,39.01
+15.,https://www.screener.in/company/ARVSMART/consolidated/,Arvind SmartSp.,617.25,30.74,2835.42,0.97,18.07,-65.15,140.51,-47.09,19.05,51.09,38.08
+16.,https://www.screener.in/company/GLOBAL/,Global Education,71.00,18.23,361.40,2.11,6.57,-37.19,24.69,5.56,35.93,50.00,71.70
+17.,https://www.screener.in/company/KRN/consolidated/,KRN Heat Exchan,792.30,83.42,4925.28,0.00,18.02,46.39,152.07,66.93,20.75,45.09,31.91
+18.,https://www.screener.in/company/MARINE/consolidated/,Marine Electric.,245.70,72.62,3389.29,0.12,16.62,29.64,222.25,20.72,16.06,43.40,33.10
+19.,https://www.screener.in/company/DPABHUSHAN/,D.P. Abhushan,1516.10,23.00,3457.77,0.00,51.46,104.78,967.65,-3.69,33.64,41.30,79.07
+20.,https://www.screener.in/company/SONACOMS/consolidated/,Sona BLW Precis.,483.80,47.98,30081.98,0.66,170.46,14.34,1138.29,23.43,17.82,40.05,33.30
+21.,https://www.screener.in/company/KKCL/,Kewal Kir.Cloth.,518.70,25.67,3187.26,0.39,42.55,-34.00,287.84,13.69,18.79,39.33,58.78
+22.,https://www.screener.in/company/BEL/consolidated/,Bharat Electron,415.15,53.29,303501.40,0.58,1287.16,17.88,5792.09,25.78,38.88,32.83,30.46
