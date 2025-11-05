@@ -647,7 +647,7 @@ class ScreenerReport:
         
         # Save for debugging
         screener_df.to_csv('screener_data.csv', index=False)
-        screener_df.to_html('result.html')
+        
         
         # STEP 3: Match announcements with screener results
         matched_stocks = screener_df #self.match_announcements_with_screen(announcements, screener_df)
@@ -686,7 +686,7 @@ if __name__ == "__main__":
     
     # Date range for announcements (last 7 days by default)
     to_date = datetime.now().strftime("%Y%m%d")
-    from_date = (datetime.now() - timedelta(days=1)).strftime("%Y%m%d")
+    from_date = (datetime.now() - timedelta(days=3)).strftime("%Y%m%d")
     
     print(f"Searching for earnings announcements from {from_date} to {to_date}")
     
