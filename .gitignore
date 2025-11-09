@@ -1,2 +1,5 @@
 .env
 gannmagic.py
+output/
+ven/
+__pycache__

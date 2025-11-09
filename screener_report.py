@@ -593,7 +593,8 @@ class ScreenerReport:
                             stock_name = match.group(1)
     
                     html += f'<td><a href="{company_url}" class="company-name" target="_blank">{stock_name}</a></td>'
-                    listofstocks.append(stock_name)
+                    if not stock_name.startswith('5'):
+                        listofstocks.append(stock_name)
                    
                 elif col == 'Headline':
                     html += f'<td class="headline">{val}</td>'
@@ -686,7 +687,7 @@ if __name__ == "__main__":
     
     # Date range for announcements (last 7 days by default)
     to_date = datetime.now().strftime("%Y%m%d")
-    from_date = (datetime.now() - timedelta(days=3)).strftime("%Y%m%d")
+    from_date = (datetime.now() - timedelta(days=15)).strftime("%Y%m%d")
     
     print(f"Searching for earnings announcements from {from_date} to {to_date}")
     
