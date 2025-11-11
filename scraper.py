@@ -12,7 +12,7 @@ if __name__ == '__main__':
         with open('data.txt', 'r') as fd:
             data = fd.read()
     else:
-        data = input("Enter the link => ")
+        data = 'https://www.screener.in/screens/3263300/myquert/'
     links = link_extractor(data)
     if links:
         generate_excel(links)

@@ -85,12 +85,33 @@ def fetch_data(link):
         current_page += 1
     
     data = data.iloc[0:].drop(data[data['S.No.'] == 'S.No.'].index)
+    name_list = ', '.join(
+        name for name in data['Name'].astype(str)
+        if not name.startswith('5')
+    )
+
+        # Print the result
+    print("Stocks", name_list)
+    
     return data
 
 
 def generate_excel(links):
+    p = 'output'
     if not os.path.exists('output'):
         os.makedirs('output')
+    else:
+        try:
+            for item in os.listdir(p):
+                item_path = os.path.join(p, item)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)
+                    print(f"Deleted file: {item_path}")
+                elif os.path.isdir(item_path):
+                    print(f"Skipping directory: {item_path}")
+        except OSError as e:
+            print(f"Error: {e}")
+            pass
     _output_df = pd.DataFrame()
     DT_STRING = datetime.now().strftime("%Y_%m_%d-%I_%M_%S_%p")
     for link in links:
@@ -98,6 +119,7 @@ def generate_excel(links):
     if not _output_df.empty:
         url_col = _output_df.pop('URL')
         _output_df.insert(len(_output_df.columns), 'URL', url_col)
+        
         _output_df.to_excel(f"output/out_{DT_STRING}.xlsx", index=None)
         print(f"[+] File is saves with the name out_{DT_STRING}.xlsx")
     else:
